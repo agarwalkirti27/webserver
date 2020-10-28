@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Multithreaded-WebServer:jar">
+    <output-path>$PROJECT_DIR$</output-path>
+    <root id="archive" name="Multithreaded-WebServer.jar">
+      <element id="module-output" name="Multithreaded-WebServer" />
+    </root>
+  </artifact>
+</component>

@@ -6,6 +6,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * WebServer class to start the webserver
+ */
 public class WebServer implements Runnable {
 
     private ServerSocket server;
@@ -15,12 +18,21 @@ public class WebServer implements Runnable {
     private final int port;
     private final int noOfThreads;
 
+    /**
+     * @param port
+     * @param webRoot
+     * @param maxThreads
+     * Parametrized constructor
+     */
     public WebServer(int port, String webRoot, int maxThreads) {
         this.port = port;
         this.noOfThreads = maxThreads;
         this.webRoot = webRoot;
     }
 
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         int port = 8080;
         String webRoot = "root/index.html";
@@ -36,6 +48,9 @@ public class WebServer implements Runnable {
     }
 
 
+    /**
+     * run method from where the Executors class starts the thread pooling
+     */
     @Override
     public void run() {
         try {
@@ -59,6 +74,9 @@ public class WebServer implements Runnable {
         close();
     }
 
+    /**
+     * customised close method to shut down executor service
+     */
     public void close() {
         try {
             server.close();
@@ -73,6 +91,9 @@ public class WebServer implements Runnable {
         }
     }
 
+    /**
+     * @return webRoot
+     */
     public String getWebRoot() {
         return webRoot;
     }

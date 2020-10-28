@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+/**
+ * HttpResponse Class to process response
+ */
 public class HttpResponse {
 
 	private static final String protocol = "HTTP/1.0";
@@ -15,11 +18,19 @@ public class HttpResponse {
 	private NavigableMap<String, String> headers = new TreeMap<String, String>();
 	private byte[] body = null;
 
+	/**
+	 * @param status
+	 * Parameterised constructor
+	 */
 	public HttpResponse(String status) {
 		this.status = status;
 		setDate(new Date());
 	}
 
+	/**
+	 * @param f
+	 * @return Http Response
+	 */
 	public HttpResponse withFile(File f) {
 		if (f.isFile()) {
 			try {
@@ -45,6 +56,10 @@ public class HttpResponse {
 		}
 	}
 
+	/**
+	 * @param msg
+	 * @return Http Response
+	 */
 	public HttpResponse withHtmlBody(String msg) {
 		setContentLength(msg.getBytes().length);
 		setContentType(ContentType.HTML);
@@ -68,6 +83,9 @@ public class HttpResponse {
 		body = null;
 	}
 
+	/**
+	 * @return headers and protocol
+	 */
 	@Override
 	public String toString() {
 		String result = protocol + " " + status +"\n";
@@ -81,12 +99,18 @@ public class HttpResponse {
 		return result;
 	}
 
+	/**
+	 * static class Status Code
+	 */
 	public static class StatusCode {
 		public static final String OK = "200 OK";
 		public static final String NOT_FOUND = "404 Not Found";
 		public static final String NOT_IMPLEMENTED = "501 Not Implemented";
 	}
 
+	/**
+	 *static class ContentType
+	 */
 	public static class ContentType {
 		public static final String TEXT = "text/plain";
 		public static final String HTML = "text/html";

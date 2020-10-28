@@ -10,68 +10,83 @@ import java.net.Socket;
 import web.HttpRequest.HttpMethod;
 import web.HttpResponse.StatusCode;
 
+/**
+ * Connection class which responds to http Get request.
+ */
 public class Connection implements Runnable {
 
-	private WebServer webServer;
-	private Socket client;
-	private InputStream in;
-	private OutputStream out;
+    private WebServer webServer;
+    private Socket client;
+    private InputStream in;
+    private OutputStream out;
 
-	public Connection(Socket cl, WebServer s) {
-		client = cl;
-		webServer = s;
-	}
+    /**
+     * @param cl Socket
+     * @param s  WebServer
+     *           Parameterised constructor
+     */
+    public Connection(Socket cl, WebServer s) {
+        client = cl;
+        webServer = s;
+    }
 
-	@Override
-	public void run() {
-		try {
-			in = client.getInputStream();
-			out = client.getOutputStream();
+    /**
+     * method to process GET,HEAD requests and handle other cases.
+     */
+    @Override
+    public void run() {
+        try {
+            in = client.getInputStream();
+            out = client.getOutputStream();
 
-			HttpRequest request = HttpRequest.parseAsHttp(in);
-			
-			if (request != null) {
-				System.out.println("Request for " + request.getUrl() + " is being processed " +
-					"by socket at " + client.getInetAddress() +":"+ client.getPort());
-				
-				HttpResponse response;
-				
-				String method;
-				if ((method = request.getMethod()).equals(HttpMethod.GET) 
-						|| method.equals(HttpMethod.HEAD)) {
-					File f = new File(webServer.getWebRoot() + request.getUrl());
-					response = new HttpResponse(StatusCode.OK).withFile(f);
-					if (method.equals(HttpMethod.HEAD)) {
-						response.removeBody();
-					}
-				} else {
-					response = new HttpResponse(StatusCode.NOT_IMPLEMENTED);
-				}
-				
-				respond(response);
-				
-			} else {
-				System.err.println("Server accepts only HTTP protocol.");
-			}
-			
-			in.close();
-			out.close();
-		} catch (IOException e) {
-			System.err.println("Error in client's IO.");
-		} finally {
-			try {
-				client.close();
-			} catch (IOException e) {
-				System.err.println("Error while closing client socket.");
-			}
-		}
-	}
+            HttpRequest request = HttpRequest.parseAsHttp(in);
 
-	public void respond(HttpResponse response) {
-		String toSend = response.toString();
-		PrintWriter writer = new PrintWriter(out);
-		writer.write(toSend);
-		writer.flush();
-	}
+            if (request != null) {
+                System.out.println("Request for " + request.getUrl() + " is being processed " +
+                        "by socket at " + client.getInetAddress() + ":" + client.getPort());
+
+                HttpResponse response;
+
+                String method;
+                if ((method = request.getMethod()).equals(HttpMethod.GET)
+                        || method.equals(HttpMethod.HEAD)) {
+                    File f = new File(webServer.getWebRoot() + request.getUrl());
+                    response = new HttpResponse(StatusCode.OK).withFile(f);
+                    if (method.equals(HttpMethod.HEAD)) {
+                        response.removeBody();
+                    }
+                } else {
+                    response = new HttpResponse(StatusCode.NOT_IMPLEMENTED);
+                }
+
+                respond(response);
+
+            } else {
+                System.err.println("Server accepts only HTTP protocol.");
+            }
+
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            System.err.println("Error in client's IO.");
+        } finally {
+            try {
+                client.close();
+            } catch (IOException e) {
+                System.err.println("Error while closing client socket.");
+            }
+        }
+    }
+
+    /**
+     * @param response response which we get from file
+     *                 Method which writes the response
+     */
+    public void respond(HttpResponse response) {
+        String toSend = response.toString();
+        PrintWriter writer = new PrintWriter(out);
+        writer.write(toSend);
+        writer.flush();
+    }
 
 }
