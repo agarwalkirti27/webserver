@@ -38,7 +38,7 @@ public class WebServer implements Runnable {
         String webRoot = "root/index.html";
         int maxThreads = 10;
         if (args.length == 0 || args[0].equals("-h") || args[0].equals("-help"))
-            System.out.println("Usage: java -cp WebServer.jar web.Server <port> <web root> <total no of threads>\n");
+            System.out.println("Usage: java -cp Multithreaded-WebServer.jar web.WebServer <port> <web root> <total no of threads>\n");
         else {
             port = Integer.parseInt(args[0]);
             webRoot = args[1];
